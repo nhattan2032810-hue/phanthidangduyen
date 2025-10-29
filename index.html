@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tân</title>
+    <link rel="icon" href="logo.png"/>
+    <style>
+
+      html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden; /* ✅ Cấm cuộn toàn trang */
+      }
+      .layout {
+        display: flex;
+        height: calc(100vh - 60px);
+        position: relative;
+      }
+
+      .sidebar {
+        width: auto;
+        background-color: #f6eadc;
+        color: black;
+        padding-top: 10px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+        transform: translateX(-100%);
+        z-index: 1001;
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .sidebar button {
+        padding: 12px 12px;
+        background: none;
+        border: none;
+        text-align: left;
+        color: black;
+        font-size: 15px;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .sidebar button:hover {
+        background-color: #aff8e2;
+        color: red;
+      }
+
+      .sidebar button.active {
+        background-color: #e6f9f4;
+        color: red;
+        font-weight: bold;
+        border-radius: 6px;
+      }
+
+      .sidebar details {
+        padding: 8px 10px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        transition: background 0.3s;
+      }
+
+      .sidebar details.active-parent > summary {
+        color: red;
+        font-weight: bold;
+        background-color: #fff0f0;
+        border-radius: 6px;
+        padding: 8px 10px;
+      }
+
+      .sidebar details {
+      display: block;
+      }
+
+      .sidebar details > button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+        }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        display: none;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .content {
+        flex-grow: 1;
+        width: 100%;
+        margin-left: 0;
+        height: 100%;
+      }
+
+        .clock-container {
+            text-align: center;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .clock {
+            font-size: 15px;
+            color: black;
+            margin-right: 10px;
+        }
+        .date {
+            font-size: 15px;
+            color: black;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 20px;
+            padding: 5px 20px;
+            cursor: pointer;
+            z-index: 1002;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+        }
+        .toggle-btn.hide {
+            display: none;
+            font-size: 2px;
+        }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+       #search-input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px auto;
+        display: block;
+        box-sizing: border-box;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        }
+            /* CSS cho mũi tên được cố định ở vị trí dưới nút menu */
+        #instruction-arrow {
+                position: fixed;
+                top: 5px;
+                left: 1px;
+                width: 150px;
+                height: auto;
+                transform: rotate(145deg);
+                animation: pulse 1s infinite;
+                z-index: 400;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1) rotate(190deg);
+                }
+                50% {
+                    transform: scale(1.1) rotate(145deg);
+                }
+                100% {
+                    transform: scale(1) rotate(145deg);
+                }
+            }
+    </style>
+  </head>
+  <body>
+    
+    <div class="clock-container">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">Đang tải ngày...</div>
+    </div>
+
+    <button class="toggle-btn" id="toggleBtn" onclick="showSidebar()">☰</button>
+    <div class="overlay" id="overlay" onclick="hideSidebar()"></div>
+    <img id="instruction-arrow" src="muiten.png" alt="Mũi tên" />
+    <div class="layout">
+      <div class="sidebar" id="sidebar">
+        <input type="text" id="search-input" placeholder="Tìm kiếm..." oninput="filterMenu()">
+        <button onclick="loadPage(event, 'website2.html')">🏠Trang chủ</button>
+
+        <details>
+          <summary>🏫 Trường</summary>
+          <button onclick="window.open('https://mydtu.duytan.edu.vn/Signin.aspx', '_blank')">Mydtu</button>
+          <button onclick="window.location.href='https://pdaotao.duytan.edu.vn/home/Default.aspx?lang=VN'">Phòng đào tạo</button>
+          <button onclick="window.location.href='https://gdtcqp.duytan.edu.vn/'">TT GDTC</button>
+       </details>
+
+        <details>
+            <summary>📢 Thông báo</summary>
+            <button onclick="window.open ('https://lhss.duytan.edu.vn/announcements')">Thông báo</button>
+        </details>
+
+       <details>
+        <summary>📝 Thi</summary>
+    <!--<button onclick="loadPage(event, 'lichthi.html')">Lịch thi</button> -->
+        <button onclick="loadPage(event, 'timmonthi.html')">Tìm môn thi</button>
+        <button onclick="window.location.href='https://pdaotao.duytan.edu.vn/Search/Default.aspx?lang=VN'">Tra sách thi</button>
+        <button onclick="window.location.href='https://pdaotao.duytan.edu.vn/EXAM_LIST/Default.aspx?lang=VN'">Danh sách thi</button>
+       </details>
+
+        <details>
+        <summary>💻 Đăng kí tín chỉ</summary>
+          <button onclick="window.open('https://courses.duytan.edu.vn/sites/Home_ChuongTrinhDaoTao.aspx?p=home_coursesearch', '_blank')">Tra môn học</button>
+          <button onclick="loadPage(event, 'thoikhoabieu.html')">Thời khóa biểu</button>
+        </details>
+
+        <details>
+        <summary>💪 GDTCQP</summary>
+            <button onclick="window.location.href='https://gdtcqp.duytan.edu.vn/'">Thể dục-Quốc phòng</button>
+        </details>
+
+        <details>
+          <summary>📊 Điểm</summary>
+          <button onclick="loadPage(event, 'tinhdiemhocphandtu.html')">Tính điểm học phần</button>
+          <button onclick="loadPage(event, 'tinhdiemdtu.html')">Tính điểm tích lũy</button>
+        </details>
+
+        <details>
+        <summary>📍 Vị trí</summary>
+            <button onclick="loadPage(event, 'dtumaps.html')">Vị trí</button>
+        </details>
+        
+        <details>
+          <summary>📷 Ảnh</summary>
+          <button onclick="loadPage(event, 'anhsv.html')">Ảnh</button>
+        </details>
+
+        </div>
+      <div class="content">
+        <iframe id="iframeView" src="website2.html"></iframe>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
+
+

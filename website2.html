@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Phan Thị Dáng Duyên</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      height: 100%;
+      background-color: #000;
+      /* Đảm bảo nền ngoài cùng là đen */
+    }
+
+    body {
+      min-height: 100vh;
+      /* Luôn lấp đầy 100% chiều cao */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: radial-gradient(circle at top, #1b0029, #000);
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+
+      /* --- YÊU CẦU MỚI --- */
+      overflow: hidden;
+      /* Ẩn mọi thanh cuộn, chống 'thừa' */
+
+      /* Chống bôi đen / chọn văn bản */
+      -webkit-user-select: none;
+      /* Safari */
+      -ms-user-select: none;
+      /* IE 10+ */
+      user-select: none;
+      /* Standard */
+    }
+
+    h1 {
+      font-size: clamp(36px, 8vw, 88px);
+      background: linear-gradient(90deg, #ffb6ff, #b3c7ff, #ffa5a5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 5s infinite linear;
+      text-shadow: 0 0 20px rgba(255, 170, 255, 0.2);
+    }
+
+    @keyframes shine {
+      0% {
+        background-position: 0 0
+      }
+
+      100% {
+        background-position: 200% 0
+      }
+    }
+
+    p {
+      font-size: clamp(16px, 2vw, 24px);
+      opacity: 0.85;
+      margin-top: 12px;
+      font-style: italic;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.6;
+      animation: fadeIn 3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .hearts span {
+      position: absolute;
+      color: #ffb6ff;
+      animation: float 8s linear infinite;
+      opacity: 0.5;
+      font-size: clamp(12px, 3vw, 24px);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0
+      }
+
+      20% {
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(-100vh) scale(1.6);
+        opacity: 0
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Phan Thị Dáng Duyên</h1>
+  <p id="poem"></p>
+
+  <div class="hearts" id="hearts"></div>
+
+  <script>
+    // --- Phần hiệu ứng trái tim rơi ---
+    const hearts = document.getElementById('hearts');
+    function makeHeart() {
+      const h = document.createElement('span');
+      h.textContent = '❤';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = (4 + Math.random() * 4) + 's';
+      hearts.appendChild(h);
+      setTimeout(() => h.remove(), 8000);
+    }
+    setInterval(makeHeart, 400);
+
+    // --- 24 BÀI THƠ LÃNG MẠN MỚI ---
+    const poems = [
+      /* 0h */ "Không gian tĩnh lại, chỉ trái tim mình...<br>Thì thầm tên em, Dáng Duyên, trong đêm.",
+      /* 1h */ "Phố đã ngủ say, sương rơi ướt lá.<br>Chỉ còn anh thức, cùng nỗi nhớ em.",
+      /* 2h */ "Giờ của những giấc mơ, anh mơ thấy nắng.<br>Là nụ cười em, sưởi ấm canh thâu.",
+      /* 3h */ "Đêm đặc quánh lại, như nỗi nhớ đong đầy.<br>Muốn vượt không gian, đến ôm em ngay.",
+      /* 4h */ "Trời sắp rạng đông, sao mờ dần tắt.<br>Tình yêu cho em, vẫn vẹn nguyên vầng.",
+      /* 5h */ "Tiếng chim đầu tiên, đánh thức ban mai.<br>Như em đánh thức, trái tim yêu này.",
+      /* 6h */ "Mặt trời lên rồi, rực rỡ như em.<br>Một ngày mới đến, chỉ để yêu thêm.",
+      /* 7h */ "Nắng sớm dịu dàng, lướt qua khung cửa.<br>Như lời em hứa, yêu mãi không xa.",
+      /* 8h */ "Bắt đầu một ngày, mang theo hình bóng.<br>Em là động lực, là niềm hy vọng.",
+      /* 9h */ "Dù bận rộn trăm bề, tâm trí vẫn vương.<br>Một góc cho em, trọn vẹn yêu thương.",
+      /* 10h */ "Giờ này em đang làm gì, có mỉm cười không?<br>Anh ở nơi đây, gửi trọn tơ lòng.",
+      /* 11h */ "Nắng đã lên cao, như tình anh vậy.<br>Luôn rực rỡ nhất, khi nghĩ về em.",
+      /* 12h */ "Giữa trưa yên ả, lòng lại bâng khuâng.<br>Ước gì có em, chung một bữa cơm.",
+      /* 13h */ "Thời gian trôi chậm, sao mãi chưa chiều?<br>Để anh được thấy, người anh mến yêu.",
+      /* 14h */ "Mong kim đồng hồ, quay nhanh thêm nữa.<br>Từng phút xa em, dài tựa thiên thu.",
+      /* 15h */ "Nắng nhạt dần rồi, trời bớt oi ả.<br>Nhớ em vô ngần, nhớ đến thiết tha.",
+      /* 16h */ "Giờ tan tầm sắp đến, lòng rộn ràng vui.<br>Sắp được gặp em, nụ cười rạng ngời.",
+      /* 17h */ "Hoàng hôn màu tím, màu của thủy chung.<br>Như tim anh nguyện, chỉ có mình Duyên.",
+      /* 18h */ "Phố lên đèn, sao trời cũng lên.<br>Đẹp nhất vẫn là, ánh mắt của em.",
+      /* 19h */ "Bên mâm cơm tối, kể chuyện vu vơ.<br>Hạnh phúc đơn sơ, mà đẹp như mơ.",
+      /* 20h */ "Xem một bộ phim, tựa vai em ngủ.<br>Bình yên gói trọn, chỉ một chữ Yêu.",
+      /* 21h */ "Thế giới ngoài kia, ồn ào mặc kệ.<br>Anh chỉ cần em, là trọn vẹn cả.",
+      /* 22h */ "Đêm đã khuya rồi, chúc em ngủ ngon.<br>Mơ về chúng mình, một tình yêu son.",
+      /* 23h */ "Một ngày sắp qua, tình vẫn còn đây.<br>Yêu em hôm nay, và nhiều hơn ngày mai."
+    ];
+
+    function updatePoem() {
+      const now = new Date();
+      const hour = now.getHours();
+      const poemText = poems[hour];
+
+      document.getElementById('poem').innerHTML = poemText;
+    }
+    updatePoem();
+    setInterval(updatePoem, 60000);
+
+    /* --- PHẦN CODE CHỐNG CHUỘT PHẢI, SAO CHÉP, F12 --- */
+
+    // Chống chuột phải
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+    });
+
+    // Chống F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+    document.addEventListener('keydown', function (e) {
+      if (e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85)) { // Ctrl+U (View Source)
+        e.preventDefault();
+      }
+    });
+
+    // Chống copy (Ctrl+C)
+    document.addEventListener('copy', function (e) {
+      e.preventDefault();
+    });
+
+  </script>
+</body>
+
+</html>

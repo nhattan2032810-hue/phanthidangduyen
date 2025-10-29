@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>
+        Lịch thi
+    </title>
+    <link href="lichthi.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="topbar">
+        <select class="dropdown-menu" id="pageSelect">
+            <option value="index.html">Lịch thi</option>
+        </select>
+        <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem;">
+            <input class="search-bar" id="searchInput" placeholder="Tìm kiếm..." type="text"/>
+            <span id="fileCount" style="white-space: nowrap; font-weight: bold; color: #333;">
+            </span>
+        </div>
+    </div>
+    <main>
+        <div class="grid" id="fileList">
+        </div>
+        <div id="examSearchInstructions" class="hidden" style="padding: 1rem; background-color: #e0f7fa; border-left: 5px solid #00bcd4; margin-top: 1rem;">
+            <h3>Hướng dẫn Tra cứu danh sách thi:</h3>
+            <p>Để tra cứu danh sách thi, bạn có thể làm theo các cách sau:</p>
+            <p>Cách 1</p>
+            <p>1. Truy cập <a href="https://pdaotao.duytan.edu.vn/Search/Default.aspx?lang=VN" target="_blank">Danh sách thi</a></p>
+            <p>2. Chọn<b>"Kết quả học tập"</b> chuyển sang <b>"Danh sách thi"</b>.</p>
+            <p>3. Nhập <b>Mã môn thi</b> vào ô tìm kiếm và nhấn nút <b>"Xem"</b> để tra cứu.</p>
+            <p>Cách 2</p>
+            <p>1. Truy cập <a href="https://pdaotao.duytan.edu.vn/EXAM_LIST/Default.aspx?lang=VN" target="_blank">Danh sách thi</b></a>.</p>
+            <p>2. Tìm đúng mã môn học</p>
+        </div>
+    </main>
+    <div class="viewer-overlay hidden" id="viewerOverlay">
+        <div class="viewer-content">
+            <span id="closeViewer">
+            ×
+            </span>
+            <iframe id="viewerFrame" src="">
+            </iframe>
+        </div>
+    </div>
+    <script src="lichthi.js">
+    </script>
+</body>
+</html>
+
