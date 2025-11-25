@@ -3,7 +3,7 @@
       { name: "254 Nguyễn Văn Linh", place: "254 Đ. Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng 550000, Việt Nam" },
       { name: "209 Phan Thanh", place: "209 Phan Thanh, Thạc Gián, Thanh Khê, Đà Nẵng 550000, Việt Nam" },
       { name: "Hòa Khánh Nam", place: "120 Hoàng Minh Thảo, Hoà Khánh Nam, Liên Chiểu, Đà Nẵng 550000, Việt Nam" },
-      { name: "Phan Văn Trị", place: "78a Phan Văn Trị, Khuê Trung, Cẩm Lệ, Đà Nẵng 55000, Việt Nam" },
+      { name: "Phan Văn Trị", place: "Trường dạy pha chế Lenemo, 78 Phan Văn Trị, Khuê Trung, Cẩm Lệ, Đà Nẵng 55000" },
       { name: "03 Quang Trung", place: "3 Quang Trung, Hải Châu, Đà Nẵng 550000, Việt Nam" },
       { name: "K7/25 Quang Trung", place: "03 Quang Trung, Hải Châu, Đà Nẵng 550000, Việt Nam" },
     ];
@@ -82,3 +82,4 @@
       });
 
     }
+
