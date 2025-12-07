@@ -1,325 +1,392 @@
 :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --warning-color: #ffc107;
-            --bg-light: #f8f9fa;
-            --border-color: #e9ecef;
-        }
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #ffc107;
+    --bg-light: #f8f9fa;
+    --border-color: #e9ecef;
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-light);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 120px;
-            margin: 10px auto; 
-            background: #fff;
-            padding: 5px 10px; /* THAY ĐỔI: Giảm padding trên và dưới */
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
+/* 1. Cố định chiều cao màn hình và ẩn thanh cuộn thừa của trình duyệt */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-light);
+    
+    /* QUAN TRỌNG: Cố định body bằng chiều cao màn hình */
+    width: 100vw;
+    height: 100vh; 
+    overflow: hidden; /* Ẩn cuộn ngoài body */
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        @media (min-width: 1210px) {
-            .container {
-                max-width: calc(100% - 10px); 
-                margin: 5px auto;
-            }
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin: 5px 0 8px 0; /* THAY ĐỔI: Giảm margin */
-            border-bottom: 1px solid var(--primary-color);
-            padding-bottom: 4px; /* THAY ĐỔI: Giảm padding */
-            font-size: 1.1em; /* THAY ĐỔI: Giảm kích thước font */
-        }
-        h2 {
-            color: #343a40;
-            margin-top: 20px;
-            padding-left: 10px;
-            border-left: 4px solid var(--warning-color);
-            font-size: 1.3em; 
-        }
-        
-        #step1Container {
-            padding: 30px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: #ffffff;
-            text-align: center;
-        }
-        input[type="file"] {
-            display: block;
-            margin: 15px auto;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ced4da;
-            width: 80%;
-            max-width: 400px;
-            box-sizing: border-box;
-            background-color: #fff;
-        }
-        
-        /* Ẩn các thành phần thông báo cũ */
-        #uploadStatus, .result-message, #resultMessageContainer, #toastContainer {
-            display: none !important; 
-        }
+/* 2. Container chính: Chứa toàn bộ nội dung */
+.container {
+    width: 95%;
+    max-width: 1400px;
+    
+    /* SỬA LỖI: Đặt chiều cao cứng để Flexbox tính toán đúng vùng cuộn */
+    height: 95vh; 
+    max-height: 95vh;
+    
+    margin: 0 auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    
+    /* Flexbox cột: Header ở trên, Bảng ở dưới tự co giãn */
+    display: flex;
+    flex-direction: column;
+}
 
-        /* --- MODAL/DIALOG CONTAINER (Giữ nguyên) --- */
-        #modalContainer {
-            display: none; /* Mặc định ẩn */
-            position: fixed;
-            z-index: 2000; /* Đảm bảo nằm trên mọi thứ */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4); /* Nền mờ */
-            backdrop-filter: blur(3px); /* Hiệu ứng mờ nền */
-            padding-top: 50px;
-            box-sizing: border-box;
-        }
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    font-size: 1.4rem;
+    flex-shrink: 0; /* Không cho tiêu đề bị co lại */
+}
 
-        .modal-content {
-            margin: 10% auto; /* Đưa hộp thoại vào giữa màn hình */
-            padding: 25px;
-            width: 90%; 
-            max-width: 40px; /* Kích thước phù hợp */
-            border-radius: 12px;           
-            text-align: center;
-            transform: scale(0.9);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
+h2 {
+    color: #343a40;
+    margin-top: 15px;
+    padding-left: 10px;
+    border-left: 4px solid var(--warning-color);
+    font-size: 1.1rem;
+}
 
-        #modalContainer.show {
-             display: block;
-        }
+/* --- STEP 1: UPLOAD --- */
+#step1Container {
+    padding: 20px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #ffffff;
+    text-align: center;
+    flex-shrink: 0;
+}
 
-        #modalContainer.show .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
+input[type="file"] {
+    display: block;
+    margin: 15px auto;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    background-color: #fdfdfd;
+    font-size: 14px;
+}
 
-        .modal-icon {
-            font-size: 2em; /* Icon lớn */
-            margin-bottom: 15px;
-            display: block;
-            line-height: 1;
-        }
+/* --- BƯỚC 2: KHUNG TÌM KIẾM VÀ BẢNG --- */
+#step2Container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Chiếm toàn bộ phần còn lại của container */
+    overflow: hidden; /* Ngăn tràn ra ngoài */
+}
 
-        .modal-content h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.5em;
-            color: #333;
-        }
+/* --- SEARCH SECTION --- */
+#searchSection {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    flex-shrink: 0; /* Không cho thanh tìm kiếm bị co lại */
+}
 
-        .modal-content p {
-            font-size: 1.0em;
-            color: #666;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
+.search-input-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center; 
+    position: relative; 
+}
 
-        /* Màu sắc theo loại thông báo */
-        .modal-success .modal-icon { color: #28a745; }
-        .modal-error .modal-icon { color: #dc3545; }
-        .modal-info .modal-icon { color: #007bff; }
-        .modal-warning .modal-icon { color: #ffc107; }
-        .modal-confirm .modal-icon { color: var(--primary-color); } /* Màu cho xác nhận */
+/* KHU VỰC BỌC INPUT & SỐ THỐNG KÊ (Đã thêm vào HTML) */
+.input-wrapper {
+    flex-grow: 1;
+    position: relative; /* Điểm neo cho định vị tuyệt đối */
+    min-width: 200px;
+}
 
+input[type="text"] {
+    width: 100%; /* Chiếm hết chiều rộng của input-wrapper */
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+    /* Thêm padding phải để số thống kê không che chữ */
+    padding-right: 70px; 
+}
 
-        /* CSS cho các nút bấm trong Modal */
-        .modal-actions {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
 
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
+.copy-button {
+    padding: 10px 10px;
+    font-size: 1px;
+    font-weight: 600;
+    color: red;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
 
-        .modal-btn-confirm {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .modal-btn-confirm:hover {
-            background-color: #0056b3;
-        }
+.copy-button:hover {
+    background-color: #f7a969;
+}
 
-        .modal-btn-cancel {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        .modal-btn-cancel:hover {
-            background-color: #5a6268;
-        }
-        /* --- END MODAL CSS --- */
+/* --- CUSTOM CSS: HIỂN THỊ SỐ DÒNG TÌM THẤY (ĐỊNH VỊ BÊN TRONG INPUT) --- */
+#resultStats {
+    /* ĐẶT VỊ TRÍ TUYỆT ĐỐI BÊN TRONG INPUT-WRAPPER */
+    position: absolute;
+    right: 5mm; /* Cách lề phải 5mm */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* STYLE: KHÔNG NỀN, KHÔNG VIỀN */
+    background-color: transparent; 
+    color: var(--primary-color); 
+    padding: 0; 
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+    border: none; 
+    box-shadow: none; 
+    z-index: 20; /* Đảm bảo nằm trên input */
+}
 
-        #searchSection {
-            padding: 15px; 
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: var(--bg-light);
-        }
-        
-        .search-input-group {
-            display: flex; 
-            gap: 10px; 
-            margin-top: 10px;
-        }
+/* --- KHU VỰC CHỨA BẢNG (QUAN TRỌNG NHẤT) --- */
+.table-wrapper {
+    /* Flex grow 1: Chiếm hết khoảng trống còn lại */
+    flex: 1; 
+    
+    /* min-height: 0 là trick fix lỗi flexbox scroll trên Firefox/Chrome cũ */
+    min-height: 0; 
+    
+    /* Bật tính năng cuộn */
+    overflow-y: auto; 
+    overflow-x: auto;
+    
+    position: relative;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
 
-        input[type="text"] {
-            padding: 10px; 
-            border-radius: 6px;
-            border: 2px solid var(--border-color);
-            flex-grow: 1; 
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
+/* Vùng bao quanh bảng để chụp ảnh */
+#captureArea {
+    width: 100%;
+    /* Đảm bảo nền trắng khi chụp */
+    background-color: white; 
+}
 
-        .copy-button {
-            padding: 10px 15px; 
-            font-size: 0.9em;
-            background-color: #fd7e14; 
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            flex-shrink: 0; 
-            line-height: 1; 
-        }
-        .copy-button:hover {
-            background-color: #e86300; 
-        }
-        
-        /* --- KHẮC PHỤC LỖI CUỘN/TRỐNG DƯỚI BẢNG --- */
-        .table-wrapper {
-            max-height: 480px;
-            overflow-y: auto;
-            overflow-x: auto; 
-            margin-top: 15px;
-            position: relative; 
-            /* ĐIỀU CHỈNH: Tăng padding-bottom lên 60px để có thêm khoảng trống cuộn */
-            padding-bottom: 10px; 
-        }
-        
-        #captureArea {
-            overflow: visible !important;
-        }
-        
-        .table-wrapper.capturing {
-            max-height: none !important;
-            overflow: visible !important;
-        }
-        .table-wrapper.capturing #resultTable th {
-             position: static !important;
-        }
+/* Style cho Header khi xuất ảnh */
+.export-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 15px 0 5px 0;
+    background-color: white;
+}
+.export-disclaimer {
+    text-align: center;
+    color: #007bff; /* Màu xanh nổi bật */
+    margin: 5px 0 10px 0;
+    font-size: 13px; /* Kích thước nhỏ */
+    font-style: italic;
+    font-weight: 600;
+    padding: 0 15px; /* Thêm padding ngang */
+}
+.export-title {
+    color: #007bff;
+    margin: 0 0 5px 0;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
-        #resultTable {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            background-color: white; 
-        }
-        #resultTable th, #resultTable td {
-            border: 1px solid #dee2e6;
-            padding: 6px 4px; 
-            text-align: left;
-            font-size: 13px; 
-            white-space: normal; 
-            word-wrap: break-word;
-        }
-        #resultTable th {
-            background-color: var(--primary-color);
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        #resultTable tbody tr:nth-child(even) {
-            background-color: #f6f6f6;
-        }
-        #resultTable tbody tr:hover {
-            background-color: #e9f2ff;
-        }
-        
-        /* --- ĐỊNH NGHĨA CHIỀU RỘNG TƯƠNG ĐỐI CHO CÁC CỘT (Giữ nguyên) --- */
-        #resultTable th:nth-child(1) { width: 5%; } 
-        #resultTable th:nth-child(2) { width: 5%; } 
-        #resultTable th:nth-child(3) { width: 10%; } 
-        #resultTable th:nth-child(4) { width: 8%; } 
-        #resultTable th:nth-child(7) { width: 10%; } 
-        #resultTable th:nth-child(8) { width: 20%; } 
-        #resultTable th:nth-child(9) { width: 10%; } 
-        #resultTable th:nth-child(10) { width: 12%; } 
-        #resultTable th:nth-child(15) { width: 10%; } 
-        #resultTable th:nth-child(16) { width: 10%; } 
-        #resultTable th:nth-child(17) { width: 8%; } 
-        
-        /* !!! FIX: ẨN CÁC CỘT THEO YÊU CẦU (Giữ nguyên) */
-        #resultTable th:nth-child(5), #resultTable td:nth-child(5),
-        #resultTable th:nth-child(6), #resultTable td:nth-child(6),
-        #resultTable th:nth-child(11), #resultTable td:nth-child(11), 
-        #resultTable th:nth-child(12), #resultTable td:nth-child(12),
-        #resultTable th:nth-child(13), #resultTable td:nth-child(13),
-        #resultTable th:nth-child(14), #resultTable td:nth-child(14) { 
-            display: none; 
-        } 
-        
-        
-        /* Media Query cho Mobile/Màn hình cực nhỏ (Giữ nguyên) */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
-                border-radius: 8px;
-            }
-            h1 {
-                font-size: 1em;
-                margin-bottom: 5px;
-            }
-            h2 {
-                font-size: 1.1em;
-            }
-            #searchSection p {
-                font-size: 0.9em;
-            }
-            .table-wrapper {
-                 max-height: 400px;
-            }
-            #resultTable {
-                table-layout: auto; 
-            }
-            .search-input-group {
-                flex-direction: column; 
-            }
-            .copy-button {
-                width: 100%; 
-            }
-        }
+.export-time {
+    color: #555;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Style cho bảng */
+#resultTable {
+    width: 100%;
+    border-collapse: collapse;
+    /* Bỏ auto để bảng render nhanh hơn với dữ liệu lớn */
+    table-layout: auto; 
+}
+
+#resultTable th,
+#resultTable td {
+    border: 1px solid #dee2e6;
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 13.5px;
+    vertical-align: middle;
+}
+
+/* Sticky Header: Giữ tiêu đề bảng luôn nổi khi cuộn */
+#resultTable thead th {
+    background-color: var(--primary-color);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Luôn nằm trên nội dung */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.2); /* Tạo bóng nhẹ ngăn cách header */
+}
+
+#resultTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Highlight Khối thi */
+.highlight-khoithi {
+    color: var(--error-color); /* Chữ màu đỏ */
+    font-weight: bold;
+    padding: 0 2px;
+}
+
+/* Ẩn các cột không cần thiết */
+#resultTable th:nth-child(5), #resultTable td:nth-child(5),
+#resultTable th:nth-child(6), #resultTable td:nth-child(6),
+#resultTable th:nth-child(11), #resultTable td:nth-child(11),
+#resultTable th:nth-child(12), #resultTable td:nth-child(12),
+#resultTable th:nth-child(13), #resultTable td:nth-child(13),
+#resultTable th:nth-child(14), #resultTable td:nth-child(14) {
+    display: none;
+}
+
+/* Lớp CSS đặc biệt khi đang chụp ảnh: Phải mở rộng hết cỡ */
+.table-wrapper.capturing {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    position: absolute; /* Đưa ra khỏi luồng layout để chụp full */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Giấu xuống dưới để người dùng không thấy bị giật */
+    width: 1200px; /* Cố định chiều rộng để ảnh đẹp */
+}
+
+/* --- MODAL CSS (Popup) --- */
+#modalContainer {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#modalContainer.show {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    width: 100%;
+    max-width: 350px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h3 {
+    margin: 10px 0;
+    font-size: 1.3em;
+    color: #333;
+}
+
+.modal-content p {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    flex: 1;
+    font-weight: 600;
+    transition: transform 0.1s;
+}
+
+.modal-btn:active { transform: scale(0.95); }
+.modal-btn-confirm { background-color: var(--primary-color); color: white; }
+.modal-btn-cancel { background-color: #e9ecef; color: #333; }
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 600px) {
+    .container {
+        height: 100vh;
+        width: 100%;
+        border-radius: 0;
+        padding: 10px;
+    }
+    
+    h1 { font-size: 1.1em; }
+    
+    .search-input-group {
+        flex-direction: column;
+    }
+    
+    .copy-button {
+        width: 100%;
+    }
+    
+    #resultTable th, #resultTable td {
+        font-size: 12px;
+        padding: 8px 5px;
+    }
+    
+    /* Điều chỉnh độ rộng cột trên mobile */
+    #resultTable th:nth-child(1) { width: 30px; } /* STT */
+    #resultTable th:nth-child(2) { width: 50px; } /* Thứ */
+    #resultTable th:nth-child(3) { width: 80px; } /* Ngày */
+}
