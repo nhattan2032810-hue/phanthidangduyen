@@ -1,51 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>
-        Lịch thi
-    </title>
-    <link href="lichthi.css" rel="stylesheet"/>
-</head>
-<body>
-    <div class="topbar">
-        <select class="dropdown-menu" id="pageSelect">
-            <option value="index.html">Lịch thi</option>
-        </select>
-        <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem;">
-            <input class="search-bar" id="searchInput" placeholder="Tìm kiếm..." type="text"/>
-            <span id="fileCount" style="white-space: nowrap; font-weight: bold; color: #333;">
-            </span>
-        </div>
-    </div>
-    <main>
-        <div class="grid" id="fileList">
-        </div>
-        <div id="examSearchInstructions" class="hidden" style="padding: 1rem; background-color: #e0f7fa; border-left: 5px solid #00bcd4; margin-top: 1rem;">
-            <h3>Hướng dẫn Tra cứu danh sách thi:</h3>
-            <p>Để tra cứu danh sách thi, bạn có thể làm theo các cách sau:</p>
-            <p>Cách 1</p>
-            <p>1. Truy cập <a href="https://pdaotao.duytan.edu.vn/Search/Default.aspx?lang=VN" target="_blank">Danh sách thi</a></p>
-            <p>2. Chọn<b>"Kết quả học tập"</b> chuyển sang <b>"Danh sách thi"</b>.</p>
-            <p>3. Nhập <b>Mã môn thi</b> vào ô tìm kiếm và nhấn nút <b>"Xem"</b> để tra cứu.</p>
-            <p>Cách 2</p>
-            <p>1. Truy cập <a href="https://pdaotao.duytan.edu.vn/EXAM_LIST/Default.aspx?lang=VN" target="_blank">Danh sách thi</b></a>.</p>
-            <p>2. Tìm đúng mã môn học</p>
-        </div>
-    </main>
-    <div class="viewer-overlay hidden" id="viewerOverlay">
-        <div class="viewer-content">
-            <span id="closeViewer">
-            ×
-            </span>
-            <iframe id="viewerFrame" src="">
-            </iframe>
-        </div>
-    </div>
-    <script src="lichthi.js">
-    </script>
-</body>
-</html>
 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch thi</title>
+    <link rel="icon" href="logoo.png" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="timmonthi.css" />
+</head>
+
+<body>
+    <div id="modalContainer" onclick="hideModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-icon" id="modalIcon"></span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Tra Cứu Lịch Môn Thi</h1>
+
+        <div id="step1Container" style="display: none">
+            <h2>Bước 1: Tải Lên File Lịch Thi 📂</h2>
+            <p>
+                Vui lòng chọn file lịch thi (.XLSX hoặc .CSV) từ trường Đại học Duy
+                Tân.
+            </p>
+            <input type="file" id="examFile"
+                accept=".csv, text/csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                onchange="handleFileUpload(event)" />
+        </div>
+
+        <div id="step2Container">
+            <div id="searchSection">
+                <div class="search-input-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="searchTermInput"
+                            placeholder="Nhập Khối thi, Mã môn, Tên môn, Địa điểm, Thứ, Giờ thi..."
+                            oninput="searchData()" autocomplete="off" autofocus />
+                        <div id="resultStats">Đang tải...</div>
+                    </div>
+                    <button class="copy-button" onclick="showCopyConfirmModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M4 7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-1.5-2h-5L8 7H4zm8 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrapper" id="tableWrapper">
+                <div id="captureArea">
+                    <div id="exportHeader" class="export-header" style="display: none;">
+                        <h2 class="export-title">LỊCH THI ĐẠI HỌC DUY TÂN</h2>
+                        <p class="export-time" id="exportTimeText">Thời gian tra cứu: ...</p>
+                    </div>
+                    <p class="export-disclaimer" id="exportDisclaimerText" style="display: none;">
+                        Miễn trừ trách nhiệm: Kết quả tra cứu chỉ có giá trị tham khảo. Xem lịch thi chính thức trên
+                        website phòng đào tạo (mục "THÔNG BÁO").
+                    </p>
+
+                    <table id="resultTable">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="100%">Đang tải dữ liệu lịch thi...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="lock_system.js"></script>
+    <script src="timmonthi.js"></script>
+</body>
+
+</html>
